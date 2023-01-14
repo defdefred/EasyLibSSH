@@ -5,12 +5,12 @@
 
 ssh_session EASYLIBSSH_session = NULL;
 ssh_bind EASYLIBSSH_sshbind = NULL;
-ssh_key EASYLIBSSH_authorized_key[EASYLIBSSH_NBAUTHKEY] = NULL;
+ssh_key EASYLIBSSH_authorized_key[EASYLIBSSH_NBAUTHKEY] = { NULL };
 
 void easylibssh_begin()
 {
   enum ssh_keytypes_e typekey = SSH_KEYTYPE_UNKNOWN;
-  int i;
+  int i,rc;
 
 #ifdef EASYLIBSSH_DEBUG
   Serial.println("Start of easylibssh_begin");
@@ -20,23 +20,23 @@ void easylibssh_begin()
 
   for(i=0;i<EASYLIBSSH_NBAUTHKEY;i++) {
 
-#ifdef EASYLIBSSH_DEBUG
+    #ifdef EASYLIBSSH_DEBUG
     Serial.print("Ssh authorized key type ");
     Serial.println(i);
-#endif
+    #endif
 
-    typekey = ssh_key_type_from_name(configTYPEKEY[i]);
+    typekey = ssh_key_type_from_name(EASYLIBSSH_TYPEKEY[i]);
 
-#ifdef EASYLIBSSH_DEBUG
+    #ifdef EASYLIBSSH_DEBUG
     if (typekey == SSH_KEYTYPE_UNKNOWN) Serial.println("Failed to decode authorized key type");
     Serial.print("Ssh authorized key ");
     Serial.println(i);
-#endif
+    #endif
 
-    i = ssh_pki_import_pubkey_base64( configAUTHKEY[i], typekey, &EASYLIBSSH_authorized_key[i]);
+    rc = ssh_pki_import_pubkey_base64( EASYLIBSSH_AUTHKEY[i], typekey, &EASYLIBSSH_authorized_key[i]);
 
 #ifdef EASYLIBSSH_DEBUG
-    if (i != SSH_OK) Serial.println("Failed to decode b64 authorized key");
+    if (rc != SSH_OK) Serial.println("Failed to decode b64 authorized key");
 #endif
   }
 #ifdef EASYLIBSSH_DEBUG
@@ -44,14 +44,15 @@ void easylibssh_begin()
 #endif
 }
 
-int easylibssh_loop_start(ssh_channel *chan)
+ssh_channel easylibssh_loop_start()
 {
   ssh_message message = NULL;
+  ssh_channel chan = NULL;
   int again = 1;
   int patience = 0;
   const int impatience = 10;
   ssh_key host_key = NULL;
-  int i;
+  int i,rc;
 
 #ifdef EASYLIBSSH_DEBUG
   Serial.println("Start of easylibssh_loop_start");
@@ -66,7 +67,7 @@ int easylibssh_loop_start(ssh_channel *chan)
 #endif
 
   i = ssh_pki_import_privkey_base64( EASYLIBSSH_HOSTKEY, NULL, NULL, NULL, &host_key);
-  if (i != SSH_OK) goto EASYLIBSSH__failed_bind;
+  if (i != SSH_OK) goto EASYLIBSSH_failed_bind;
 
 #ifdef EASYLIBSSH_DEBUG
   Serial.println("Ssh bind import key");
@@ -115,7 +116,7 @@ int easylibssh_loop_start(ssh_channel *chan)
         Serial.print(ssh_message_auth_user(message));
         Serial.println(" want to connect with pubkey");
 #endif
-        for(i=0;i<EASYLIBSSH_NBAUTH;i++) {
+        for(i=0;i<EASYLIBSSH_NBAUTHKEY;i++) {
           if (!ssh_key_cmp(ssh_message_auth_pubkey(message), EASYLIBSSH_authorized_key[i], SSH_KEY_CMP_PUBLIC)) {
             switch (ssh_message_auth_publickey_state(message)) {
               case SSH_PUBLICKEY_STATE_NONE:
@@ -123,7 +124,7 @@ int easylibssh_loop_start(ssh_channel *chan)
                 Serial.print("pubkey ok but not yet validated ");
                 Serial.println(i);
 #endif
-                i=EASYLIBSSH_NBAUTH;
+                i=EASYLIBSSH_NBAUTHKEY;
                 ssh_message_auth_reply_pk_ok_simple(message);
                 break;             
               case SSH_PUBLICKEY_STATE_VALID:
@@ -131,7 +132,7 @@ int easylibssh_loop_start(ssh_channel *chan)
                 Serial.print("Pubkey ok and signature validated");
                 Serial.println(i);
 #endif
-                i=EASYLIBSSH_NBAUTH;
+                i=EASYLIBSSH_NBAUTHKEY;
                 again=0;
                 ssh_message_auth_reply_success(message,0);
             }
@@ -275,13 +276,13 @@ int easylibssh_loop_start(ssh_channel *chan)
     goto EASYLIBSSH_failed_channel;
   }
 
-  ssh_set_blocking(session, 0);
+  ssh_set_blocking(EASYLIBSSH_session, 0);
 
 #ifdef EASYLIBSSH_DEBUG
   Serial.println("Start of pseudo Shell");
 #endif
 
-return SSH_OK;
+return chan;
 
 EASYLIBSSH_failed_channel:
 
@@ -315,10 +316,10 @@ EASYLIBSSH_failed_bind:
   ssh_bind_free(EASYLIBSSH_sshbind);
 
 EASYLIBSSH_failed_bind_new:
-  return SSK_ERROR;
+  return NULL;
 }
 
-void easylibssh_loop_end(ssh_channel *chan)
+void easylibssh_loop_end(ssh_channel chan)
 {
 #ifdef EASYLIBSSH_DEBUG
   Serial.println("End of pseudo Shell");
