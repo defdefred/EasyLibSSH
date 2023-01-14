@@ -1,10 +1,10 @@
 # EasyLibSSH - LibSSH made easy for ESP32
-Thanks to the wonderful [!ewpa/LibSSH-ESP32](https://github.com/ewpa/LibSSH-ESP32) port.
+Thanks to the wonderful [ewpa/LibSSH-ESP32](https://github.com/ewpa/LibSSH-ESP32) port.
 ## Use cases
 Using ssh/Putty to connect securely to your ESP32 and command your project via a CLI or TUI interface.
 
 ## Hardware & Software
-Any ESP32 board with usb port and flashed with Arduino GUI or ![CLI](https://github.com/defdefred/EasyLibSSH/blob/main/README_Arduino.md).
+Any ESP32 board with usb port and flashed with Arduino GUI or [CLI](https://github.com/defdefred/EasyLibSSH/blob/main/README_Arduino.md).
 
 ## Configuration
 ### Debuging
@@ -49,7 +49,7 @@ const char *configSTAPSK = "mySECRET";
 
 ## Projects using EasyLibSSH
 - EasyLibSSH: An example is provided, printing "It Works!" to the ssh client and resending back every strokes. "~." to quit.
-- ![Remotty](https://github.com/defdefred/Remotty): Remotte SSH to Serial USB access.
+- [Remotty](https://github.com/defdefred/Remotty): Remotte SSH to Serial USB access.
 - More: to come...
 
 ## Usefull links
