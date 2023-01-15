@@ -17,8 +17,8 @@ const char *EASYLIBSSH_AUTHKEY[] = { "AAAAC3NzaC1lZDI1NTE5AAAAIPtooFfereunifeni3
 ssh_channel chan;
 
 // Set local WiFi credentials
-const char *configSTASSID = "mySID";
-const char *configSTAPSK = "mySECRET";
+// const char *configSTASSID = "mySID";
+// const char *configSTAPSK = "mySECRET";
 #include "WiFi.h"
 
 #define MAX 2048
@@ -32,10 +32,14 @@ void setup()
   WiFi.begin(configSTASSID, configSTAPSK);
   while (WiFi.status() != WL_CONNECTED) delay(1000);
 
-#ifdef DEBUG | EASYLIBSSH_DEBUG
+  #ifdef DEBUG | EASYLIBSSH_DEBUG
   Serial.begin(115200);
+  Serial.print("Wifi MAC: ");
+  Serial.println(WiFi.macAddress());
+  Serial.print("Wifi IP: ");
   Serial.println(WiFi.localIP());
-#endif
+  Serial.println("EasyLibSSH begin");
+  #endif
 
   easylibssh_begin();
 }
