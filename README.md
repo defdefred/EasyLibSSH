@@ -34,7 +34,7 @@ const char *EASYLIBSSH_AUTHKEY[] = { "AAAAC3NzaC1lZDI1NTE5AAAAIPtooFfereunifeni3
 ↪kMo6mUHWq" };
 
 ```
-You need include the library and to customize the name of the ssh channel.
+You need to include the library and to customize the name of the ssh channel.
 ```
 #include "easylibssh.h"
 // choose the name of your ssh_channel
