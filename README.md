@@ -6,10 +6,7 @@ Thanks to the wonderful [ewpa/LibSSH-ESP32](https://github.com/ewpa/LibSSH-ESP32
 
 ## Hardware & Software
 Any ESP32 board flashed with Arduino GUI or [CLI](https://github.com/defdefred/EasyLibSSH/blob/main/README_Arduino.md).
-```
-/dev/ttyACM0 serial   Serial Port (USB) LOLIN S2 Mini esp32:esp32:lolin_s2_mini esp32:esp32
-```
-Last tested version: LibSSH-ESP32@5.7.0
+Last tested version: Arduino-ESP32@3.3.4 and LibSSH-ESP32@5.7.0
 
 ## Configuration
 To print all libssh step to establish the secure connection.
