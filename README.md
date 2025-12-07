@@ -6,9 +6,12 @@ Thanks to the wonderful [ewpa/LibSSH-ESP32](https://github.com/ewpa/LibSSH-ESP32
 
 ## Hardware & Software
 Any ESP32 board flashed with Arduino GUI or [CLI](https://github.com/defdefred/EasyLibSSH/blob/main/README_Arduino.md).
+```
+/dev/ttyACM0 serial   Serial Port (USB) LOLIN S2 Mini esp32:esp32:lolin_s2_mini esp32:esp32
+```
+Last tested version: LibSSH-ESP32@5.7.0
 
 ## Configuration
-### Debuging
 To print all libssh step to establish the secure connection.
 ```
 // Display errors via serial
@@ -47,7 +50,28 @@ Data to connect to your confidential WiFi management network.
 const char *configSTASSID = "mySID";
 const char *configSTAPSK = "mySECRET";
 ```
+## Troubleshooting
+If you encountered a stack error message like:
+```
+***ERROR*** A stack overflow in task loopTask has been detected.
+Core  0 register dump:
+MEPC    : 0x40381d70  RA      : 0x403864e6  SP      : 0x3fc95360  GP      : 0x3fc8da00  
+TP      : 0x3fc64438  T0      : 0x4005890e  T1      : 0x0000000f  T2      : 0x00000001  
+S0/FP   : 0x3fc95380  S1      : 0x3fc95380  A0      : 0x3fc95380  A1      : 0x3c0f0078  
+A2      : 0x0000000b  A3      : 0x3fc953ae  A4      : 0x00000001  A5      : 0x3fc99000  
+A6      : 0x3fc9de68  A7      : 0x0003e000  S2      : 0x00001881  S3      : 0x3fc98edc  
+S4      : 0x3fca03a4  S5      : 0xffffffff  S6      : 0x3fc9e72c  S7      : 0x3fc9e52c  
+S8      : 0x3fc9ed2c  S9      : 0x00001000  S10     : 0x3fc99000  S11     : 0x3fca040c  
+T3      : 0x00000000  T4      : 0x00000000  T5      : 0x00000001  T6      : 0x00000000  
+MSTATUS : 0x00001801  MTVEC   : 0x40380001  MCAUSE  : 0x00000007  MTVAL   : 0x00000000  
+MHARTID : 0x00000000  
+```
+You need to increase the LoopTask stack size with:
+```
+// This sets Arduino Stack Size - comment this line to use default 8K stack size
+SET_LOOP_TASK_STACK_SIZE(16 * 1024);  // 16KB
 
+```
 ## Projects using EasyLibSSH
 - EasyLibSSH: An example is provided, printing "It Works!" to the ssh client and resending back every strokes. "~." to quit.
 - [Remotty](https://github.com/defdefred/Remotty): Remotte SSH to Serial USB access.

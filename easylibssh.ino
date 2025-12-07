@@ -12,6 +12,9 @@ const char *EASYLIBSSH_TYPEKEY[] = { "ssh-ed25519",
 const char *EASYLIBSSH_AUTHKEY[] = { "AAAAC3NzaC1lZDI1NTE5AAAAIPtooFfereunifeni34345352y/qI2Iys6kkMo6mUHWq",
                                      "AAAAC3NzaC1lZDI1NTE5AAAAIPtooFfcMRdCSSouYMrBpXVG2y/qI2Iys6kkMo6mUHWq" };
 
+// Stack size needed to run SSH.
+SET_LOOP_TASK_STACK_SIZE(16 * 1024);  // 16KB
+
 #include "easylibssh.h"
 // choose the name of your ssh_channel
 ssh_channel chan;
