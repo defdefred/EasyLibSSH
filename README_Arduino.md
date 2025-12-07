@@ -109,7 +109,8 @@ Monitor port settings:
 stop_bits=1
 Connected to /dev/ttyUSB0! Press CTRL-C to exit.
 ```
-After last upgrade, I got stack issue with my projet, si I needed to downgrade th esp32 core.
+After last upgrade, I got stack issue with my project, so I needed to downgrade the esp32 core.
+
 Searching older core version:
 ```
 wize@minipc:~/Arduino$ ./arduino-cli core search esp32 -a
