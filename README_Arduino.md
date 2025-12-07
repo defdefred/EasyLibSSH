@@ -6,6 +6,10 @@ user@minipc1:~/Downloads$ tar ztfv arduino-cli_0.29.0_Linux_64bit.tar.gz
 -rwxr-xr-x root/root  27425400 2022-11-17 10:22 arduino-cli
 -rw-r--r-- runner/docker 35149 2022-11-17 10:21 LICENSE.txt
 ```
+Increase the default network timeout
+```
+wize@minipc:~/Arduino$ ./arduino-cli config set network.connection_timeout 600s
+```
 Don't forget to install / upgrade the board ESP32:
 ```
 user@minipc1:~/Arduino$ ./arduino-cli core update-index
@@ -105,3 +109,150 @@ Monitor port settings:
 stop_bits=1
 Connected to /dev/ttyUSB0! Press CTRL-C to exit.
 ```
+After last upgrade, I got stack issue with my projet, si I needed to downgrade th esp32 core.
+Searching older core version:
+```
+wize@minipc:~/Arduino$ ./arduino-cli core search esp32 -a
+ID            Version                  Name
+arduino:esp32 2.0.10                   Arduino ESP32 Boards
+arduino:esp32 2.0.11                   Arduino ESP32 Boards
+arduino:esp32 2.0.12                   Arduino ESP32 Boards
+arduino:esp32 2.0.13                   Arduino ESP32 Boards
+arduino:esp32 2.0.18-20240930.arduino3 Arduino ESP32 Boards
+arduino:esp32 2.0.18-arduino.5         Arduino ESP32 Boards
+esp32:esp32   1.0.0                    esp32
+esp32:esp32   1.0.1                    esp32
+esp32:esp32   1.0.2                    esp32
+esp32:esp32   1.0.3                    esp32
+esp32:esp32   1.0.4                    esp32
+esp32:esp32   1.0.5                    esp32
+esp32:esp32   1.0.6                    esp32
+esp32:esp32   2.0.0                    esp32
+esp32:esp32   2.0.1                    esp32
+esp32:esp32   2.0.2                    esp32
+esp32:esp32   2.0.3                    esp32
+esp32:esp32   2.0.4                    esp32
+esp32:esp32   2.0.5                    esp32
+esp32:esp32   2.0.6                    esp32
+esp32:esp32   2.0.7                    esp32
+esp32:esp32   2.0.8                    esp32
+esp32:esp32   2.0.9                    esp32
+esp32:esp32   2.0.10                   esp32
+esp32:esp32   2.0.11                   esp32
+esp32:esp32   2.0.12                   esp32
+esp32:esp32   2.0.13                   esp32
+esp32:esp32   2.0.14                   esp32
+esp32:esp32   2.0.15                   esp32
+esp32:esp32   2.0.16                   esp32
+esp32:esp32   2.0.17                   esp32
+esp32:esp32   3.0.0                    esp32
+esp32:esp32   3.0.1                    esp32
+esp32:esp32   3.0.2                    esp32
+esp32:esp32   3.0.3                    esp32
+esp32:esp32   3.0.4                    esp32
+esp32:esp32   3.0.5                    esp32
+esp32:esp32   3.0.6                    esp32
+esp32:esp32   3.0.7                    esp32
+esp32:esp32   3.1.0                    esp32
+esp32:esp32   3.1.1                    esp32
+esp32:esp32   3.1.2                    esp32
+esp32:esp32   3.1.3                    esp32
+esp32:esp32   3.2.0                    esp32
+esp32:esp32   3.2.1                    esp32
+esp32:esp32   3.3.0                    esp32
+esp32:esp32   3.3.1                    esp32
+esp32:esp32   3.3.2                    esp32
+esp32:esp32   3.3.3                    esp32
+esp32:esp32   3.3.4                    esp32
+```
+Uninstall core and install a specific version:
+```
+wize@minipc:~/Arduino$ ./arduino-cli core uninstall esp32:esp32
+Uninstalling esp32:esp32@3.3.4...
+Running pre_uninstall script....
+Platform esp32:esp32@3.3.4 uninstalled
+Uninstalling esp32:esp32-arduino-libs@idf-release_v5.5-8410210c-v2, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:esp32-arduino-libs@idf-release_v5.5-8410210c-v2 uninstalled
+Uninstalling esp32:esp-x32@2507, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:esp-x32@2507 uninstalled
+Uninstalling esp32:xtensa-esp-elf-gdb@16.3_20250913, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:xtensa-esp-elf-gdb@16.3_20250913 uninstalled
+Uninstalling esp32:esp-rv32@2507, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:esp-rv32@2507 uninstalled
+Uninstalling esp32:riscv32-esp-elf-gdb@16.3_20250913, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:riscv32-esp-elf-gdb@16.3_20250913 uninstalled
+Uninstalling esp32:openocd-esp32@v0.12.0-esp32-20250707, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:openocd-esp32@v0.12.0-esp32-20250707 uninstalled
+Uninstalling esp32:esptool_py@5.1.0, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:esptool_py@5.1.0 uninstalled
+Uninstalling esp32:mkspiffs@0.2.3, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:mkspiffs@0.2.3 uninstalled
+Uninstalling esp32:mklittlefs@4.0.2-db0513a, tool is no more required...
+Running pre_uninstall script....
+Tool esp32:mklittlefs@4.0.2-db0513a uninstalled
+Uninstalling arduino:dfu-util@0.11.0-arduino5, tool is no more required...
+Running pre_uninstall script....
+Tool arduino:dfu-util@0.11.0-arduino5 uninstalled
+```
+Try version 2.0.17
+```
+wize@minipc:~/Arduino$ ./arduino-cli core install esp32:esp32@2.0.17
+Téléchargement des paquets...
+esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0 esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0 déjà téléchargé
+esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0 esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0 déjà téléchargé
+esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0 esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0 déjà téléchargé
+esp32:xtensa-esp-elf-gdb@11.2_20220823 esp32:xtensa-esp-elf-gdb@11.2_20220823 déjà téléchargé
+esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0 esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0 déjà téléchargé
+esp32:riscv32-esp-elf-gdb@11.2_20220823 esp32:riscv32-esp-elf-gdb@11.2_20220823 déjà téléchargé
+esp32:openocd-esp32@v0.12.0-esp32-20230921 esp32:openocd-esp32@v0.12.0-esp32-20230921 déjà téléchargé
+esp32:esptool_py@4.5.1 esp32:esptool_py@4.5.1 déjà téléchargé
+esp32:mkspiffs@0.2.3 esp32:mkspiffs@0.2.3 déjà téléchargé
+esp32:mklittlefs@3.0.0-gnu12-dc7f933 esp32:mklittlefs@3.0.0-gnu12-dc7f933 déjà téléchargé
+arduino:dfu-util@0.11.0-arduino5 arduino:dfu-util@0.11.0-arduino5 déjà téléchargé
+esp32:esp32@2.0.17 downloaded                                                                                                                                                                                        
+Installing esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0...
+Configuring tool....
+esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+Installing esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0...
+Configuring tool....
+esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+Installing esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0...
+Configuring tool....
+esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+Installing esp32:xtensa-esp-elf-gdb@11.2_20220823...
+Configuring tool....
+esp32:xtensa-esp-elf-gdb@11.2_20220823 installed
+Installing esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0...
+Configuring tool....
+esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+Installing esp32:riscv32-esp-elf-gdb@11.2_20220823...
+Configuring tool....
+esp32:riscv32-esp-elf-gdb@11.2_20220823 installed
+Installing esp32:openocd-esp32@v0.12.0-esp32-20230921...
+Configuring tool....
+esp32:openocd-esp32@v0.12.0-esp32-20230921 installed
+Installing esp32:esptool_py@4.5.1...
+Configuring tool....
+esp32:esptool_py@4.5.1 installed
+Installing esp32:mkspiffs@0.2.3...
+Configuring tool....
+esp32:mkspiffs@0.2.3 installed
+Installing esp32:mklittlefs@3.0.0-gnu12-dc7f933...
+Configuring tool....
+esp32:mklittlefs@3.0.0-gnu12-dc7f933 installed
+Installing arduino:dfu-util@0.11.0-arduino5...
+Configuring tool....
+arduino:dfu-util@0.11.0-arduino5 installed
+Installing platform esp32:esp32@2.0.17...
+Configuration de la plateforme....
+Platform esp32:esp32@2.0.17 installed
+```
+
